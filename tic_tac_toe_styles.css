@@ -1,0 +1,202 @@
+#mainContainer {
+  position: relative;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+  height: 555px;
+  width: 500px;
+  box-shadow: 0px 2px 30px grey;
+
+  border-radius: 7px;
+}
+
+#gameContainer {
+  position: absolute;
+  /* background-color: aqua; */
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
+#resultsContainer {
+  display: block;
+  position: relative;
+  height: 45px;
+  margin-bottom: 15px;
+}
+#results {
+  position: absolute;
+
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+#redCircle {
+  display: inline-block;
+  background-color: #e74c3c;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  position: relative;
+  color: white;
+}
+#blueCircle {
+  display: inline-block;
+  background-color: #3498db;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  position: relative;
+  margin-left: 15px;
+  color: white;
+}
+#tieCircle {
+  display: inline-block;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  position: relative;
+  margin-left: 15px;
+}
+#results span {
+  font-size: 22;
+  font-family: Roboto, sans-serif;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#playGround {
+  position: relative;
+
+  min-width: 308px;
+}
+.box {
+  height: 100px;
+  width: 100px;
+  background-color: #e0e0e0;
+  display: inline-block;
+  border-radius: 3px;
+}
+#message-box {
+  height: 50px;
+  width: 308px;
+
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  visibility: hidden;
+  z-index: -1;
+}
+#message-container {
+  background-color: rgba(224, 224, 224, 0.75);
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+
+  height: inherit;
+  width: inherit;
+
+  z-index: inherit;
+  visibility: inherit;
+}
+#message-box span {
+  font-size: 23;
+
+  font-family: nunito, sans-serif;
+  color: #2b3744;
+  font-weight: 800;
+}
+#current-player-opponent {
+  position: relative;
+  height: 35px;
+  display: table-cell;
+  vertical-align: middle;
+  width: 308px;
+
+  color: black;
+  margin-top: 2px;
+}
+#current-player-information {
+  display: inline;
+}
+span#turn-label {
+  font-weight: 700;
+  font-family: "lato", sans-serif;
+  font-size: 18;
+  color: #2c3e50;
+}
+span#current-player {
+  font-family: "lato", sans-serif;
+  font-weight: 900;
+  font-size: 18;
+}
+#select-opponent-section {
+  display: inline-block;
+
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  text-align: center;
+  border: 1px solid #2c3e50;
+  border-radius: 5px;
+}
+
+select#opponent-options:focus {
+  outline: none;
+}
+select#opponent-options:hover {
+  cursor: pointer;
+}
+select#opponent-options {
+  font-family: "lato", sans-serif;
+  font-weight: bold;
+  color: #2c3e50;
+  padding: 2px 2px;
+  border: 0px;
+
+  font-size: 17;
+
+  background-color: transparent;
+}
+option {
+  font-family: "lato", sans-serif;
+  font-size: 17;
+  font-weight: bold;
+}
+#new-game-section {
+  display: block;
+  position: relative;
+  height: 48px;
+  margin-top: 15px;
+}
+#new-game-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+#new-game:hover {
+  background-color: #2c3e50;
+  color: white;
+  cursor: pointer;
+}
+#new-game {
+  background-color: transparent;
+  border: 2px solid #2c3e50;
+  color: #2c3e50;
+  padding: 10px 15px;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 700;
+  outline: none;
+  font-family: roboto, sans-serif;
+  border-radius: 5px;
+}

@@ -1,0 +1,373 @@
+<html>
+  <head>
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" type="text/css" href="tic_tac_toe_styles.css" />
+
+    <script>
+      var game = newGame();
+      var results = new Map([["Red", 0], ["Blue", 0], ["Tie", 0]]);
+      //false is red, true is blue
+      var currentPlayer = false;
+      var winner = "none";
+      var countTaps = 0;
+      var opponent;
+      var startingNewGameSetTimeout;
+      // A NEW GAME
+      function newGame() {
+        var firstMap = [["position", 0], ["player", -1]];
+        var secondMap = [["position", 1], ["player", -1]];
+        var thirdMap = [["position", 2], ["player", -1]];
+        var fourthMap = [["position", 3], ["player", -1]];
+        var fifthMap = [["position", 4], ["player", -1]];
+        var sixthMap = [["position", 5], ["player", -1]];
+        var seventhMap = [["position", 6], ["player", -1]];
+        var eigthMap = [["position", 7], ["player", -1]];
+        var ninthMap = [["position", 8], ["player", -1]];
+
+        var newGame = [
+          new Map(firstMap),
+          new Map(secondMap),
+          new Map(thirdMap),
+          new Map(thirdMap),
+          new Map(fourthMap),
+          new Map(fifthMap),
+          new Map(sixthMap),
+          new Map(seventhMap),
+          new Map(eigthMap),
+          new Map(ninthMap)
+        ];
+
+        return newGame;
+      }
+
+      //   STARTS A NEW GAME
+      function startNewGame() {
+        game = newGame();
+        winner = "none";
+        currentPlayer = currentPlayer;
+        countTaps = 0;
+        //changing colors of all the positions
+        for (var i = 0; i < 9; i++) {
+          document.getElementById(String(i)).style.backgroundColor = "#e0e0e0";
+        }
+        //hiding the message
+        hideMessage();
+        //if the first turn is computers turn then make a move
+        if (opponent.localeCompare("computer") == 0 && currentPlayer == true) {
+          makeComputerMove();
+        }
+      }
+      //   POSSIBLE WINNING POSITIONS
+      var winningPositions = [
+        [0, 1, 2],
+        [0, 3, 6],
+        [0, 4, 8],
+        [2, 5, 8],
+        [6, 7, 8],
+        [3, 4, 5],
+        [2, 4, 6],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8]
+      ];
+
+      //   RESETS SCOREBOARD
+      function resetResults() {
+        results = new Map([["Red", 0], ["Blue", 0], ["Tie", 0]]);
+      }
+      //   CHANGES COLOR OF THE PLAY BOX
+      function changeColor(position) {
+        document.getElementById(String(position)).style.backgroundColor =
+          currentPlayer == false ? "#e74c3c" : "#3498db";
+      }
+
+      // SEARCHES FOR A WINNER
+      function searchWinner() {
+        var i;
+        var updateValue;
+        for (i = 0; i < winningPositions.length; i++) {
+          // CHECKS IF THE POSSIBLE WINNING POSITIONS ARE ASSIGNED TO THE SAME PLAYER
+          if (
+            game[winningPositions[i][0]].get("player") == currentPlayer &&
+            game[winningPositions[i][1]].get("player") == currentPlayer &&
+            game[winningPositions[i][2]].get("player") == currentPlayer
+          ) {
+            //   IF YES THEN WE HAVE A WINNER
+
+            // FALSE=RED(FRIEND MODE)/PLAYER(COMPUTER MODE)
+            if (currentPlayer == false) {
+              //increasing point for red(FRIEND MODE)/PLAYER(COMPUTER MODE)
+              updateValue = results.get("Red") + 1;
+              results.set("Red", updateValue);
+
+              //displaying THE WIN MESSAGE
+              opponent.localeCompare("friend") == 0
+                ? showMessage("Red Won!")
+                : showMessage("You Won!");
+
+              return "Red";
+            }
+            // TRUE=BLUE(FRIEND MODE)/COMPUTER(COMPUTER MODE)
+            else {
+              //increasing point for blue(FRIEND MODE)/COMPUTER(COMPUTER MODE)
+              updateValue = results.get("Blue") + 1;
+              results.set("Blue", updateValue);
+
+              //displaying THE WIN MESSAGE
+
+              opponent.localeCompare("friend") == 0
+                ? showMessage("Blue Won!")
+                : showMessage("You Lost!");
+
+              return "Blue";
+            }
+          }
+        }
+
+        return "none";
+      }
+
+      //   WHEN A BOX IS LEGALLY CHOSEN BY A PLAYER/COMPUTER
+      function handleChoose(position) {
+        //   IF ITS NOT THE END OF THE GAME/WINNER IS NOT DECIDED YET
+        if (winner.localeCompare("none") == 0) {
+          //changing number of taps
+          countTaps++;
+
+          //changing color OF THE BOX first
+          changeColor(position);
+
+          //assigning player to the position
+          game[position].set("player", currentPlayer == false ? false : true);
+
+          //CHECKS FOR A WINNER
+          winner = searchWinner();
+
+          //changing the current player
+          currentPlayer = !currentPlayer;
+
+          //checking if someone won
+          if (winner.localeCompare("none") != 0) {
+            //if yes then display message of starting a new game after SOME secs
+
+            startingNewGameSetTimeout = setTimeout(function() {
+              showMessage("Starting New Game...");
+            }, 1250);
+            // START A NEW GAME AFTER DISPLAYING "STARTING NEW GAME"
+            setTimeout(startNewGame, 2200);
+          }
+
+          //checking if it was a tie
+          if (winner.localeCompare("none") == 0 && countTaps == 9) {
+            //setting a tie
+            winner = "Tie";
+            var updateValue = results.get("Tie") + 1;
+            results.set("Tie", updateValue);
+
+            //displaying tie
+            showMessage("Tie!");
+
+            //starting new game
+            startingNewGameSetTimeout = setTimeout(function() {
+              showMessage("Starting New Game...");
+            }, 1250);
+            setTimeout(startNewGame, 2200);
+          }
+
+          //updating scoreboard
+          updateScoreboard();
+
+          //updating current player/TURN
+          displayCurrentPlayer();
+
+          //if the opponent is computer and its computers turn
+          if (
+            opponent.localeCompare("computer") == 0 &&
+            currentPlayer == true
+          ) {
+            makeComputerMove();
+          }
+        }
+      }
+
+      //   UPDATES SCOREBOARD
+      function updateScoreboard() {
+        document.getElementById("redWinValue").innerHTML = results.get("Red");
+        document.getElementById("blueWinValue").innerHTML = results.get("Blue");
+        document.getElementById("tieValue").innerHTML = results.get("Tie");
+      }
+
+      // MAKES COMPUTER MOVE
+      function makeComputerMove() {
+        var computerChosenPosition = getRandomPosition(0, 9);
+        setTimeout(function() {
+          handleChoose(computerChosenPosition);
+        }, 500);
+      }
+      //   GETS RANDOM POSITION FOR COMPUTER MOVE
+      function getRandomPosition(min, max) {
+        var position = Math.floor(Math.random() * (max - min)) + min;
+        if (game[position].get("player") != -1) {
+          position = getRandomPosition(0, 9);
+        }
+        return position; //The maximum is exclusive and the minimum is inclusive
+      }
+
+      // DISPLAYS CURRENT PLAYER/TURN
+      function displayCurrentPlayer() {
+        //if the opponent is computer
+        if (opponent.localeCompare("computer") == 0) {
+          document.getElementById("current-player").innerHTML =
+            currentPlayer == false ? "You" : "Computer";
+          document.getElementById("current-player").style.color =
+            currentPlayer == false ? "#e74c3c" : "#3498db";
+        }
+        //if the opponent is a friend
+        else {
+          document.getElementById("current-player").innerHTML =
+            currentPlayer == false ? "Red" : "Blue";
+          document.getElementById("current-player").style.color =
+            currentPlayer == false ? "#e74c3c" : "#3498db";
+        }
+      }
+
+      //   CHANGES OPPONENT
+      function changeOpponent() {
+        opponent = document.getElementById("opponent-options").value;
+        clearTimeout(startingNewGameSetTimeout);
+        hideMessage();
+        startNewGame();
+        resetResults();
+        updateScoreboard();
+        displayCurrentPlayer();
+      }
+
+      //   HIDES A MESSAGE
+      function hideMessage() {
+        //hiding message invalid move
+        document.getElementById("message-box").style.visibility = "hidden";
+        document.getElementById("message-box").style.zIndex = -1;
+      }
+
+      //   DISPLAYS A MESSAGE
+      function showMessage(message) {
+        document.getElementById("message-box").style.zIndex = 1;
+        document.getElementById("message").innerHTML = message;
+
+        document.getElementById("message-box").style.visibility = "visible";
+
+        // if its an invalid move message then hide it after 1000ms
+        if (message.localeCompare("Invalid Move!") == 0) {
+          setTimeout(hideMessage, 1000);
+        }
+      }
+
+      //   DECIDES VALIDITY OF A BOX CLICK AND FIRES handleChoose()
+      function handleClick(position) {
+        //IF THE OPPONENT IS COMPUTER AND ITS COMPUTERS TURN THEN TELL THE PLAYER TO WAIT FOR THE COMPUTER
+        if (opponent.localeCompare("computer") == 0 && currentPlayer == true) {
+          showMessage("Wait...");
+          setTimeout(hideMessage, 500);
+        }
+        //IF THE OPPONENT IS COMPUTER AND ITS PLAYER TURN THEN,
+        // FIRST CHECK IF THAT BOX IS AVAILABLE TO BE CHOSEN,
+        // IF YES THEN ASSIGN THAT BOX TO THE PLAYER
+        // ELSE CHECK IF THE ITS NOT THE END OF THE GAME
+        // IF ITS NOT THEN SHOW INVALID MOVE MESSAGE
+        else if (
+          opponent.localeCompare("computer") == 0 &&
+          currentPlayer == false
+        ) {
+          if (game[position].get("player") == -1) {
+            handleChoose(position);
+          } else {
+            if (winner.localeCompare("none") == 0) {
+              showMessage("Invalid Move!");
+            }
+          }
+        }
+        // IF ITS FRIEND MODE
+        else {
+          // CHECK IF THAT BOX IS ASSIGNED TO A PLAYER
+          // IF NOT (-1 VALUE) THEN ASSIGN THAT BOX TO THE CURRENT PLAYER
+          // ELSE SHOW INVALID MOVE MESSAGE
+          if (game[position].get("player") == -1) {
+            handleChoose(position);
+          } else {
+            if (winner.localeCompare("none") == 0) {
+              showMessage("Invalid Move!");
+            } else {
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="mainContainer">
+      <div id="gameContainer">
+        <div id="resultsContainer">
+          <div id="results">
+            <div id="redCircle"><span id="redWinValue">0</span></div>
+
+            <div id="blueCircle"><span id="blueWinValue">0</span></div>
+
+            <div id="tieCircle"><span id="tieValue">0</span></div>
+          </div>
+        </div>
+
+        <div id="playGround">
+          <div class="box" id="0" onclick="handleClick(0)"></div>
+          <div class="box" id="1" onclick="handleClick(1)"></div>
+          <div class="box" id="2" onclick="handleClick(2)"></div>
+          <!-- Message Box -->
+          <div id="message-box">
+            <div id="message-container"><span id="message">message</span></div>
+          </div>
+
+          <div class="box" id="3" onclick="handleClick(3)"></div>
+          <div class="box" id="4" onclick="handleClick(4)"></div>
+          <div class="box" id="5" onclick="handleClick(5)"></div>
+
+          <div class="box" id="6" onclick="handleClick(6)"></div>
+          <div class="box" id="7" onclick="handleClick(7)"></div>
+          <div class="box" id="8" onclick="handleClick(8)"></div>
+        </div>
+
+        <!-- Current player  and opponent information -->
+        <div id="current-player-opponent">
+          <!-- current player information -->
+          <div id="current-player-information">
+            <span id="turn-label">Turn:</span>
+            <span id="current-player"></span>
+          </div>
+
+          <!-- select opponent -->
+          <div id="select-opponent-section">
+            <select id="opponent-options" onchange="changeOpponent();">
+              <option value="computer">Computer</option>
+              <option value="friend">Friend</option>
+            </select>
+          </div>
+        </div>
+        <!-- new game -->
+        <div id="new-game-section">
+          <div id="new-game-container">
+            <input
+              type="button"
+              value="New Game"
+              onclick="startNewGame()"
+              id="new-game"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      //checking opponent and displaying current player on load time
+      opponent = document.getElementById("opponent-options").value;
+      displayCurrentPlayer();
+    </script>
+  </body>
+</html>
